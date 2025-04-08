@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
+import axios from "axios";
+
 
 function App() {
     const [sessions, setSessions] = useState([]);
@@ -29,7 +31,13 @@ function App() {
             setCurrentView("home");
         }
         setUsers(savedUsers);
+    
+        // Fetch sessions from the backend
+        axios.get("http://localhost:3001/api/sessions")
+            .then((res) => setSessions(res.data))
+            .catch((err) => console.error("Failed to fetch sessions", err));
     }, []);
+    
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,10 +45,21 @@ function App() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newSession = { ...formData, id: Date.now(), attended: false };
-        setSessions([...sessions, newSession]);
-        setFormData({ subject: "", topic: "", date: "", time: "", location: "", capacity: "" });
+        axios.post("http://localhost:3001/api/sessions", formData)
+            .then((res) => {
+                setSessions([...sessions, res.data]);
+                setFormData({
+                    subject: "",
+                    topic: "",
+                    date: "",
+                    time: "",
+                    location: "",
+                    capacity: ""
+                });
+            })
+            .catch((err) => console.error("Failed to create session", err));
     };
+    
 
     const handleAuthChange = (e) => {
         setAuthData({ ...authData, [e.target.name]: e.target.value });
