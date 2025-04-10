@@ -33,7 +33,7 @@ function App() {
         setUsers(savedUsers);
     
         // Fetch sessions from the backend
-        axios.get("http://localhost:3001/api/sessions")
+        axios.get("https://study-session-organizer-9a5u.vercel.app/")
             .then((res) => setSessions(res.data))
             .catch((err) => console.error("Failed to fetch sessions", err));
     }, []);
@@ -45,7 +45,7 @@ function App() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("http://localhost:3001/api/sessions", formData)
+        axios.post("https://study-session-organizer-9a5u.vercel.app/", formData)
             .then((res) => {
                 setSessions([...sessions, res.data]);
                 setFormData({
